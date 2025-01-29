@@ -1,0 +1,101 @@
+import sqlite3
+import os
+
+def open_database(file_name):
+    try:
+        conn = sqlite3.connect(file_name)
+        return conn
+    except sqlite3.DatabaseError as e:
+        print(f"Error opening database: {e}")
+        return None
+
+def main():
+    file_name = "bookstore.db"
+    if not os.path.exists(file_name):
+        print(f"File {file_name} does not exist.")
+        return
+
+    conn = open_database(file_name)
+    if conn is None:
+        return
+
+    # Rest of your code her
+
+class BookStore:
+    def __init__(self):
+        self.conn = sqlite3.connect('bookstore')
+        self.cursor = self.conn.cursor()
+
+    def view_book_information(self):
+        book_title = input("Enter book title: ")
+        self.cursor.execute("SELECT * FROM UpcomingBooks WHERE BookTitle = ?", (book_title,))
+        rows = self.cursor.fetchall()
+        if len(rows) == 0:
+            print("Book not found.")
+        else:
+            for row in rows:
+                print("Book Title:", row[0])
+                print("Author:", row[1])
+                print("Genre:", row[2])
+                print("Publication Date:", row[3])
+                print()
+            
+    def view_customer_information(self):
+        customer_name = input("Enter customer name: ")
+        self.cursor.execute("SELECT * FROM Customers WHERE CustomerName = ?", (customer_name,))
+        rows = self.cursor.fetchall()
+        for row in rows:
+            print("Customer Name:", row[0])
+            print("Email:", row[1])
+            print("Phone:", row[2])
+            print()
+
+    def view_employee_information(self):
+        employee_name = input("Enter employee name: ")
+        self.cursor.execute("SELECT * FROM Employees WHERE EmployeeName = ?", (employee_name,))
+        rows = self.cursor.fetchall()
+        for row in rows:
+            print("Employee Name:", row[0])
+            print("Job Title:", row[1])
+            print("Email:", row[2])
+            print("Phone:", row[3])
+            print()
+
+    def view_seller_information(self):
+        seller_name = input("Enter seller name: ")
+        self.cursor.execute("SELECT * FROM Sellers WHERE SellerName = ?", (seller_name,))
+        rows = self.cursor.fetchall()
+        for row in rows:
+            print("Seller Name:", row[0])
+            print("Email:", row[1])
+            print("Phone:", row[2])
+            print()
+
+    def run(self):
+        while True:
+            print("Welcome to the Book Store!")
+            print("1. View Book Information")
+            print("2. View Customer Information")
+            print("3. View Employee Information")
+            print("4. View Seller Information")
+            print("5. Exit")
+            choice = input("Enter your choice: ")
+            if choice == "1":
+                self.view_book_information()
+            elif choice == "2":
+                self.view_customer_information()
+            elif choice == "3":
+                self.view_employee_information()
+            elif choice == "4":
+                self.view_seller_information()
+            elif choice == "5":
+                break
+            else:
+                print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    bookstore = BookStore()
+    bookstore.run()
+
+if __name__ == "__main__":
+    main()
